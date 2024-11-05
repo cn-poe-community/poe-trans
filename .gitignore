@@ -1,0 +1,4 @@
+/target
+/test/*
+!/test/assets.ts
+/src/db/assets.rs
