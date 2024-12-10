@@ -66,7 +66,7 @@ impl Slot {
             slot.active = true;
         }
 
-        return slot;
+        slot
     }
 
     pub fn new_jewel(name: &str, node_id: i32) -> Slot {
@@ -74,7 +74,7 @@ impl Slot {
         slot.name = name.to_string();
         slot.node_id = Some(node_id);
 
-        return slot;
+        slot
     }
 }
 

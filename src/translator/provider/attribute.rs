@@ -13,11 +13,11 @@ impl Provider {
             zh_idx.insert(attr.zh.clone(), attr);
         }
 
-        return Provider { zh_idx };
+        Provider { zh_idx }
     }
 
     pub fn provide_by_zh(&self, zh: &str) -> Option<&Attribute> {
-        return self.zh_idx.get(zh);
+        self.zh_idx.get(zh)
     }
 }
 

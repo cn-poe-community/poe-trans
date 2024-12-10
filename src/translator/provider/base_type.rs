@@ -25,10 +25,10 @@ impl Provider {
             list.extend(base_types.into_iter());
         }
 
-        return Provider {
+        Provider {
             base_types: list,
             zh_idx,
-        };
+        }
     }
 
     pub fn provide_by_zh(&self, zh: &str) -> Option<Vec<&BaseType>> {

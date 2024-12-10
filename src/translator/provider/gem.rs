@@ -23,10 +23,10 @@ impl Provider {
             zh_idx.insert(skill.zh.clone(), skill);
         }
 
-        return Provider { zh_idx };
+        Provider { zh_idx }
     }
 
     pub fn provide_by_zh(&self, zh: &str) -> Option<&Skill> {
-        return self.zh_idx.get(zh);
+        self.zh_idx.get(zh)
     }
 }

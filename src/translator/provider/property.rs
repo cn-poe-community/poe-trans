@@ -25,11 +25,11 @@ impl Provider {
             }
         }
 
-        return Provider {
+        Provider {
             properties,
             zh_idx,
             zh_body_idx,
-        };
+        }
     }
 
     pub fn provide_by_zh(&self, zh: &str) -> Option<&Property> {

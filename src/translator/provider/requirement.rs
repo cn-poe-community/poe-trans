@@ -20,17 +20,17 @@ impl Provider {
             suffixes_zh_idx.insert(s.zh.clone(), s);
         }
 
-        return Provider {
+        Provider {
             requirements_zh_idx,
             suffixes_zh_idx,
-        };
+        }
     }
 
     pub fn provide_by_zh(&self, zh: &str) -> Option<&Requirement> {
-        return self.requirements_zh_idx.get(zh);
+        self.requirements_zh_idx.get(zh)
     }
 
     pub fn provide_suffix_by_zh(&self, zh: &str) -> Option<&RequirementSuffix> {
-        return self.suffixes_zh_idx.get(zh);
+        self.suffixes_zh_idx.get(zh)
     }
 }

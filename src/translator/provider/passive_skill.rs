@@ -26,22 +26,22 @@ impl Provider {
             ascendants_zh_idx.insert(node.zh.clone(), node);
         }
 
-        return Provider {
+        Provider {
             notables_zh_idx,
             keystones_zh_idx,
             ascendants_zh_idx,
-        };
+        }
     }
 
     pub fn provide_notable_by_zh(&self, zh: &str) -> Option<&Node> {
-        return self.notables_zh_idx.get(zh);
+        self.notables_zh_idx.get(zh)
     }
 
     pub fn provide_keystone_by_zh(&self, zh: &str) -> Option<&Node> {
-        return self.keystones_zh_idx.get(zh);
+        self.keystones_zh_idx.get(zh)
     }
 
     pub fn provide_ascendant_by_zh(&self, zh: &str) -> Option<&Node> {
-        return self.ascendants_zh_idx.get(zh);
+        self.ascendants_zh_idx.get(zh)
     }
 }

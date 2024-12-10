@@ -91,7 +91,7 @@ pub struct MasteryEffect {
 
 impl MasteryEffect {
     pub fn new(node_id: i32, effect_id: i32) -> MasteryEffect {
-        return MasteryEffect { node_id, effect_id };
+        MasteryEffect { node_id, effect_id }
     }
 }
 
@@ -193,10 +193,10 @@ pub struct Override {
 
 impl Override {
     pub fn new(dn: &str, node_id: i32) -> Override {
-        return Override {
+        Override {
             dn: dn.to_string(),
             node_id,
-        };
+        }
     }
 }
 

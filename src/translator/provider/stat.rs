@@ -72,11 +72,11 @@ impl Provider {
             }
         }
 
-        return Provider {
+        Provider {
             stats,
             zh_body_idx,
             first_line_zh_body_idx,
-        };
+        }
     }
 
     pub fn provide(&self, id: usize) -> &Stat {
@@ -92,6 +92,6 @@ impl Provider {
     }
 
     pub fn provide_by_first_line_zh_body(&self, zh: &str) -> Option<&MultilineStats> {
-        return self.first_line_zh_body_idx.get(zh);
+        self.first_line_zh_body_idx.get(zh)
     }
 }

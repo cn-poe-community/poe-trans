@@ -1,6 +1,6 @@
 # poe-trans
 
-Rewrite cn-poe-export and pob-building-creator by rust.
+Rewrite cn-poe-export and pob-building-creator in rust.
 
 # usage
 

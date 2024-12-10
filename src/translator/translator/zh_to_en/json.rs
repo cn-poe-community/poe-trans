@@ -15,7 +15,7 @@ pub struct Json {
 
 impl Json {
     pub fn new(basic: Arc<Basic>) -> Json {
-        return Json { basic };
+        Json { basic }
     }
 
     const ZH_THIEF_TRINKET: &str = "赏金猎人饰品";
@@ -43,7 +43,7 @@ impl Json {
             }
         }
 
-        return item.base_type != Self::ZH_THIEF_TRINKET;
+        item.base_type != Self::ZH_THIEF_TRINKET
     }
 
     fn pre_handle_item(&self, item: &mut Item) {
@@ -284,7 +284,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_translation() {
+    fn test_translate() {
         let factory = super::super::Factory::new();
         let translator = factory.json_translator();
 

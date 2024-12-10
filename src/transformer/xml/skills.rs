@@ -301,7 +301,7 @@ impl Default for Gem {
 
 impl Gem {
     fn is_vaal_gem(&self) -> bool {
-        return self.name_spec.starts_with("Vaal ");
+        self.name_spec.starts_with("Vaal ")
     }
 
     pub fn new(data: &model::items::Item) -> Gem {
@@ -337,7 +337,7 @@ impl Gem {
             gem.enable_global2 = true;
         }
 
-        return gem;
+        gem
     }
 }
 

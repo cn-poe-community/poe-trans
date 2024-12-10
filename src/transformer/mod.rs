@@ -42,12 +42,12 @@ impl Transformer {
         skills: model::passive_skills::PassiveSkills,
         options: Options,
     ) -> Transformer {
-        return Transformer {
+        Transformer {
             supporter: support::Supporter::new(),
             items,
             skills,
             options,
-        };
+        }
     }
 
     pub fn transform(&self) -> PathOfBuilding {
@@ -64,7 +64,7 @@ impl Transformer {
         self.parse_items(&mut item_id_gen, &mut building);
         self.parse_tree(&mut item_id_gen, &mut building);
 
-        return building;
+        building
     }
 
     fn parse_items(&self, item_id_gen: &mut i32, building: &mut PathOfBuilding) {
@@ -140,8 +140,7 @@ impl Transformer {
     }
 
     fn get_building_items(&self) -> Vec<&model::items::Item> {
-        return self
-            .items
+        self.items
             .items
             .iter()
             .filter(|x| {
@@ -158,7 +157,7 @@ impl Transformer {
                 }
                 x.base_type != "THIEFS_TRINKET"
             })
-            .collect();
+            .collect()
     }
 
     fn parse_tree(&self, item_id_gen: &mut i32, building: &mut PathOfBuilding) {
@@ -232,7 +231,7 @@ impl Transformer {
         }
 
         use base64::{engine::general_purpose::URL_SAFE, Engine as _};
-        return URL_SAFE.encode(buffer);
+        URL_SAFE.encode(buffer)
     }
 
     fn get_enabled_node_ids_of_jewels(&self) -> Vec<i32> {
@@ -303,7 +302,7 @@ impl Transformer {
         let n = min(hash_ex_set.len(), all_probable_node_ids.len());
         all_enabled_node_ids.extend(&all_probable_node_ids[..n]);
 
-        return all_enabled_node_ids;
+        all_enabled_node_ids
     }
 
     fn get_enabled_node_ids_of_jewel<'a>(
@@ -516,7 +515,7 @@ impl Transformer {
             hash_ex_set.remove(&origninal_id);
         }
 
-        return (enabled_node_ids, probable_node_ids);
+        (enabled_node_ids, probable_node_ids)
     }
 }
 

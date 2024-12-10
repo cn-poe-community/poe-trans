@@ -20,6 +20,7 @@ pub struct Basic {
 }
 
 impl Basic {
+    /// Create a new basic translator.
     pub fn new(
         attribute_provider: attribute::Provider,
         basetype_provider: base_type::Provider,
@@ -29,7 +30,7 @@ impl Basic {
         requirement_provider: requirement::Provider,
         stat_provider: stat::Provider,
     ) -> Basic {
-        return Basic {
+        Basic {
             attribute_provider,
             basetype_provider,
             gem_provider,
@@ -37,11 +38,11 @@ impl Basic {
             property_provider,
             requirement_provider,
             stat_provider,
-        };
+        }
     }
 }
 
-/// base type
+/// methods for base type
 impl Basic {
     const ZH_SUPERIOR_PREFIX: &str = "精良的 ";
     //const EN_SUPERIOR_PREFIX: &str = "Superior ";
@@ -50,7 +51,9 @@ impl Basic {
 
     const EN_DEFALUT_NAME: &str = "Item";
 
-    /// Return the first one matches name.
+    /// Find the base type by name.
+    ///
+    /// There may be multiple base types match the name, return the first one.  
     fn find_base_type(&self, name: &str) -> Option<&BaseType> {
         let list = self.basetype_provider.provide_by_zh(name);
         if list.is_none() {
@@ -59,10 +62,10 @@ impl Basic {
 
         let list = list.unwrap();
 
-        return Some(list[0]);
+        Some(list[0])
     }
 
-    /// Return the base type contains target unique.
+    /// Find the base type by unique name and base type name.
     fn find_base_type_by_unique(&self, name: &str, base_type: &str) -> Option<&BaseType> {
         let list = self.basetype_provider.provide_by_zh(base_type);
         if list.is_none() {
@@ -84,9 +87,16 @@ impl Basic {
             }
         }
 
-        return None;
+        None
     }
 
+    /// Find the base type by type line.
+    ///
+    /// The type line may be prefixed with "精良的 " or "忆境 ".
+    /// The method will remove the prefix and find the base type.
+    ///
+    /// For magic items, the type line contains adjectives like "模范的炉火之".
+    /// The method will remove the adjectives and find the base type.
     fn find_base_type_by_type_line(&self, type_line: &str) -> Option<&BaseType> {
         let mut type_line = type_line;
         if type_line.starts_with(Self::ZH_SUPERIOR_PREFIX) {
@@ -112,9 +122,14 @@ impl Basic {
             return false;
         });
 
-        return result;
+        result
     }
 
+    /// Translate the name and base type.
+    ///
+    /// If there is a unique with the same name and base type, return the unique's En name and En base type.
+    /// Otherwise, translate the base type and return (default name, base_type) if input name is not empty
+    /// or ("", base_type) if input name is empty.
     pub fn trans_name_and_base_type(
         &self,
         name: &str,
@@ -134,18 +149,20 @@ impl Basic {
             }
         }
 
-        let b = self.find_base_type(base_type);
-        if let Some(b) = b {
-            let name = match name.len() {
-                0 => "",
-                _ => Self::EN_DEFALUT_NAME,
-            };
-            return Some((String::from(name), b.en.clone()));
+        if let Some(en) = self.trans_base_type(base_type) {
+            return Some((
+                match name.len() {
+                    0 => String::from(""),
+                    _ => String::from(Self::EN_DEFALUT_NAME),
+                },
+                en,
+            ));
         }
 
-        return None;
+        None
     }
 
+    /// Translate the base type.
     pub fn trans_base_type(&self, base_type: &str) -> Option<String> {
         let b = self.find_base_type(base_type);
         match b {
@@ -154,18 +171,21 @@ impl Basic {
         }
     }
 
+    /// Translate the type line.
+    ///
+    /// Find the base type by type line and return the En base type.
     pub fn trans_type_line(&self, type_line: &str) -> Option<String> {
         let b = self.find_base_type_by_type_line(type_line);
         if let Some(b) = b {
             return Some(b.en.clone());
         }
-        return None;
+        None
     }
 }
 
 static GEM_PROPERTY_NAMES: [(&str, &str); 2] = [("等级", "Level"), ("品质", "Quality")];
 
-/// attribute,gem,prop,requirements...
+/// methods for attribute,gem,prop,requirements...
 impl Basic {
     /// Translate attribute name and value.
     pub fn trans_attr(&self, name: &str, value: &str) -> (Option<String>, Option<String>) {
@@ -186,7 +206,7 @@ impl Basic {
             None => {}
         }
 
-        return (None, None);
+        (None, None)
     }
 
     /// Translate only attribute name.
@@ -199,7 +219,7 @@ impl Basic {
     }
 
     fn fmt_gem_name(zh: &str) -> String {
-        return zh.replace("(", "（").replace(")", "）");
+        zh.replace("(", "（").replace(")", "）")
     }
 
     pub fn trans_gem(&self, name: &str) -> Option<String> {
@@ -209,7 +229,7 @@ impl Basic {
             return Some(gem.en.clone());
         }
 
-        return None;
+        None
     }
 
     pub fn trans_gem_prop(&self, zh: &str) -> Option<String> {
@@ -219,31 +239,31 @@ impl Basic {
             }
         }
 
-        return None;
+        None
     }
 
     pub fn trans_notable(&self, zh: &str) -> Option<String> {
         let node = self.passive_skill_provider.provide_notable_by_zh(zh);
-        return match node {
+        match node {
             Some(b) => Some(b.en.clone()),
             None => None,
-        };
+        }
     }
 
     pub fn trans_keystone(&self, zh: &str) -> Option<String> {
         let node = self.passive_skill_provider.provide_keystone_by_zh(zh);
-        return match node {
+        match node {
             Some(b) => Some(b.en.clone()),
             None => None,
-        };
+        }
     }
 
     pub fn trans_ascendant(&self, zh: &str) -> Option<String> {
         let node = self.passive_skill_provider.provide_ascendant_by_zh(zh);
-        return match node {
+        match node {
             Some(b) => Some(b.en.clone()),
             None => None,
-        };
+        }
     }
 
     pub fn trans_prop(&self, name: &str, value: &str) -> (Option<String>, Option<String>) {
@@ -264,7 +284,7 @@ impl Basic {
             None => {}
         }
 
-        return (Some(prop.en.clone()), None);
+        (Some(prop.en.clone()), None)
     }
 
     pub fn trans_prop_name(&self, name: &str) -> Option<String> {
@@ -289,7 +309,7 @@ impl Basic {
             }
         }
 
-        return None;
+        None
     }
 
     /// Translate requirement.
@@ -308,27 +328,27 @@ impl Basic {
             }
         }
 
-        return (Some(req.en.clone()), None);
+        (Some(req.en.clone()), None)
     }
 
     pub fn trans_req_name(&self, zh: &str) -> Option<String> {
         let req = self.requirement_provider.provide_by_zh(zh);
-        return match req {
+        match req {
             Some(b) => Some(b.en.clone()),
             None => None,
-        };
+        }
     }
 
     pub fn trans_req_suffix(&self, zh: &str) -> Option<String> {
         let req = self.requirement_provider.provide_suffix_by_zh(zh);
-        return match req {
+        match req {
             Some(b) => Some(b.en.clone()),
             None => None,
-        };
+        }
     }
 }
 
-//stat
+/// methods for stat
 impl Basic {
     const ZH_ANOINTED_MOD_PREFIX: &str = "配置 ";
     const ZH_FORBIDDEN_FLAME_MOD_PREFIX: &str = "禁断之火上有匹配的词缀则配置 ";
@@ -341,56 +361,56 @@ impl Basic {
         "While a Pinnacle Atlas Boss is in your Presence, ";
 
     fn is_anointed_mod(&self, mod_str: &str) -> bool {
-        return mod_str.starts_with(Self::ZH_ANOINTED_MOD_PREFIX);
+        mod_str.starts_with(Self::ZH_ANOINTED_MOD_PREFIX)
     }
 
     fn trans_anointed_mod(&self, mod_str: &str) -> Option<String> {
         let notable = &mod_str[Self::ZH_ANOINTED_MOD_PREFIX.len()..];
         let trans = self.trans_notable(notable);
 
-        return match trans {
+        match trans {
             Some(trans) => Some(format!("Allocates {}", trans)),
             None => None,
-        };
+        }
     }
 
     fn is_forbidden_flame_mod(&self, mod_str: &str) -> bool {
-        return mod_str.starts_with(Self::ZH_FORBIDDEN_FLAME_MOD_PREFIX);
+        mod_str.starts_with(Self::ZH_FORBIDDEN_FLAME_MOD_PREFIX)
     }
 
     fn trans_forbidden_flame_mod(&self, mod_str: &str) -> Option<String> {
         let ascendant = &mod_str[Self::ZH_FORBIDDEN_FLAME_MOD_PREFIX.len()..];
         let trans = self.trans_ascendant(ascendant);
 
-        return match trans {
+        match trans {
             Some(trans) => Some(format!(
                 "Allocates {} if you have the matching modifier on Forbidden Flame",
                 trans
             )),
             None => None,
-        };
+        }
     }
 
     fn is_forbidden_flesh_mod(&self, mod_str: &str) -> bool {
-        return mod_str.starts_with(Self::ZH_FORBIDDEN_FLESH_MOD_PREFIX);
+        mod_str.starts_with(Self::ZH_FORBIDDEN_FLESH_MOD_PREFIX)
     }
 
     fn trans_forbidden_flesh_mod(&self, mod_str: &str) -> Option<String> {
         let ascendant = &mod_str[Self::ZH_FORBIDDEN_FLESH_MOD_PREFIX.len()..];
         let trans = self.trans_ascendant(ascendant);
 
-        return match trans {
+        match trans {
             Some(trans) => Some(format!(
                 "Allocates {} if you have the matching modifier on Forbidden Flesh",
                 trans
             )),
             None => None,
-        };
+        }
     }
 
     fn is_eldritch_implicit_mod(&self, mod_str: &str) -> bool {
-        return mod_str.starts_with(Self::ZH_UNIQUE_ENEMY_IN_YOUR_PRESENCE)
-            || mod_str.starts_with(Self::ZH_PINNACLE_ATLAS_BOSS_IN_YOUR_PRESENCE);
+        mod_str.starts_with(Self::ZH_UNIQUE_ENEMY_IN_YOUR_PRESENCE)
+            || mod_str.starts_with(Self::ZH_PINNACLE_ATLAS_BOSS_IN_YOUR_PRESENCE)
     }
 
     fn trans_eldritch_implicit_mod(&self, mod_str: &str) -> Option<String> {
@@ -424,7 +444,7 @@ impl Basic {
             }
         }
 
-        return None;
+        None
     }
 
     pub fn trans_mod(&self, mod_str: &str) -> Option<String> {
@@ -441,7 +461,7 @@ impl Basic {
             return self.trans_eldritch_implicit_mod(mod_str);
         }
 
-        return self.trans_mod_inner(mod_str);
+        self.trans_mod_inner(mod_str)
     }
 
     fn trans_mod_inner(&self, mod_str: &str) -> Option<String> {
@@ -457,7 +477,7 @@ impl Basic {
             }
         }
 
-        return None;
+        None
     }
 
     fn do_trans_mod(&self, stat: &Stat, mod_str: &str) -> Option<String> {
@@ -472,7 +492,7 @@ impl Basic {
             return Some(en_tmpl.render(params));
         }
 
-        return None;
+        None
     }
 
     pub fn get_max_lines_of_multiline_mod(&self, first_line: &str) -> usize {
@@ -482,7 +502,7 @@ impl Basic {
             return entry.max_lines;
         };
 
-        return 0;
+        0
     }
     /// Translate multiline mod for text item.
     ///
@@ -510,16 +530,15 @@ impl Basic {
             }
         };
 
-        return None;
+        None
     }
 }
 
 #[test]
 fn test_translate() {
     use crate::db::{assets, Assets};
-    use std::fs;
 
-    let contents = fs::read_to_string(assets::ASSETS_DATA).unwrap();
+    let contents = assets::ASSETS_DATA;
     let assets: Assets = serde_json::from_str(&contents).unwrap();
 
     let attribute_provider = attribute::Provider::new(assets.attributes);

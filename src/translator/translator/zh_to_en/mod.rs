@@ -11,11 +11,13 @@ use crate::{
     translator::provider::{attribute, base_type, gem, passive_skill, property, requirement, stat},
 };
 
+/// Factory for basic and json translator.
 pub struct Factory {
     basic: Arc<Basic>,
 }
 
 impl Factory {
+    /// Create a new Factory.
     pub fn new() -> Factory {
         let assets: Assets = serde_json::from_str(ASSETS_DATA).unwrap();
 
@@ -55,10 +57,14 @@ impl Factory {
 
         let basic = Arc::new(basic);
 
-        return Factory { basic };
+        Factory { basic }
+    }
+
+    pub fn basic_translator(&self) -> Arc<Basic> {
+        self.basic.clone()
     }
 
     pub fn json_translator(&self) -> Json {
-        return Json::new(self.basic.clone());
+        Json::new(self.basic.clone())
     }
 }

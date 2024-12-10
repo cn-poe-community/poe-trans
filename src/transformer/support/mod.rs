@@ -23,14 +23,14 @@ pub fn get_class(class_id: usize) -> &'static str {
     if class_id < CLASSES.len() {
         return CLASSES[class_id];
     }
-    return "None";
+    "None"
 }
 
 pub fn get_ascendancy(class_id: usize, ascendancy_id: usize) -> &'static str {
     if class_id < CLASSES.len() && ascendancy_id < ASCENDANCIES[0].len() {
         return ASCENDANCIES[class_id][ascendancy_id];
     }
-    return "None";
+    "None"
 }
 
 pub fn get_class_id(class: &str) -> (usize, usize) {
@@ -48,7 +48,7 @@ pub fn get_class_id(class: &str) -> (usize, usize) {
         }
     }
 
-    return (0, 0);
+    (0, 0)
 }
 
 pub static CLUSTER_JEWEL_SIZE_SMALL: usize = 0;
@@ -73,7 +73,7 @@ static EXPANSION_SLOT_NODE_IDS: [i32; 60] = [
 ];
 
 pub fn node_id_of_expansion_slot(seq_num: usize) -> i32 {
-    return EXPANSION_SLOT_NODE_IDS[seq_num];
+    EXPANSION_SLOT_NODE_IDS[seq_num]
 }
 
 static JEWELS_META_DATA: &str = r#"[
@@ -148,18 +148,18 @@ impl Supporter {
     pub fn new() -> Supporter {
         let jewels_meta: Vec<JewelMeta> = serde_json::from_str(JEWELS_META_DATA).unwrap();
         let tree_meta: TreeMeta = serde_json::from_str(TREE_META_DATA).unwrap();
-        return Supporter {
+        Supporter {
             jewels_meta,
             tree_meta,
-        };
+        }
     }
 
     pub fn get_jewel_meta(&self, size: usize) -> &JewelMeta {
-        return self.jewels_meta.get(size).unwrap();
+        self.jewels_meta.get(size).unwrap()
     }
 
     pub fn tree_meta(&self) -> &TreeMeta {
-        return &self.tree_meta;
+        &self.tree_meta
     }
 }
 
@@ -183,10 +183,10 @@ pub fn get_slot_name(inventory_id: &str, x: i32) -> String {
         return format!("Flask {}", x + 1);
     }
 
-    return SLOT_MAP
+    SLOT_MAP
         .get(inventory_id)
         .unwrap_or(&inventory_id)
-        .to_string();
+        .to_string()
 }
 
 #[cfg(test)]
