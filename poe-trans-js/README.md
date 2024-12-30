@@ -1,8 +1,8 @@
 # poe-trans-js
 
-Some useful scripts or tests writen by typescript：
+Some useful scripts or tests written in typescript：
 
-`src/translation.test.ts`，Test whether the translation result of poe-trans is consistent with cn-poe-translator：
+`src/translation.test.ts` tests whether the translation result of poe-trans is consistent with cn-poe-translator：
 
 ```sh
 bun test
