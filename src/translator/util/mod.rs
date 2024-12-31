@@ -8,20 +8,21 @@ fn non_ascii_but_percent(text: &str) -> String {
 }
 
 pub fn get_zh_body(text: &str) -> String {
-    return non_ascii_but_percent(text);
+    non_ascii_but_percent(text)
 }
 
 pub fn is_dynamic_property(text: &str) -> bool {
-    return text.contains("{0}");
+    text.contains("{0}")
 }
 
-pub const LINE_SEPERATOR: &str = "\n";
+pub const LINE_SEPARATOR: &str = "\n";
 
+#[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn test_regex() {
-        use crate::translator::util::non_ascii_but_percent;
-
         assert_eq!(
             non_ascii_but_percent(
                 "近期内，你或你的召唤生物每击败一个敌人\n则每秒回复你 {0}% 能量护盾，每秒最多 10%"

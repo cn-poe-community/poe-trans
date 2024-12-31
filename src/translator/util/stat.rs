@@ -52,10 +52,10 @@ impl Template {
         //beginning empty segment is needed too for the same reason.
         segments.push(String::from(&text[j..]));
 
-        return Template {
+        Template {
             segments,
             param_nums,
-        };
+        }
     }
 
     // parse_params parses the modifier and returns positional parameters.
@@ -78,7 +78,7 @@ impl Template {
 
             return Some(params_map);
         };
-        return None;
+        None
     }
 
     pub fn render(&self, params_map: HashMap<i32, String>) -> String {
@@ -93,7 +93,7 @@ impl Template {
 
         buf.push(self.segments.last().unwrap());
 
-        return buf.join("");
+        buf.join("")
     }
 }
 

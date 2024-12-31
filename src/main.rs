@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use flate2::{write::ZlibEncoder, Compression};
 use poe_trans::{
     model::{items::Items, passive_skills::PassiveSkills},
@@ -8,6 +6,7 @@ use poe_trans::{
 };
 use serde::{Deserialize, Serialize};
 use std::io::prelude::*;
+use std::sync::Arc;
 use warp::Filter;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -28,20 +27,19 @@ async fn main() {
         .and(warp::body::content_length_limit(1024 * 300))
         .and(factory)
         .and(warp::body::json())
-        .map(|zh2en: Arc<Factory>, mut json: JsonBuild| {
+        .map(|zh2en: Arc<Factory>, json: JsonBuild| {
+            let mut json = json;
             let translator = zh2en.json_translator();
             translator.trans_items(&mut json.items);
             translator.trans_passive_skills(&mut json.passive_skills);
 
             let transformer = Transformer::new(json.items, json.passive_skills, Options::default());
-
             let build_xml = transformer.transform().to_string();
-            let buffer = Vec::new();
-            let mut d = ZlibEncoder::new(buffer, Compression::default());
-            d.write_all(build_xml.as_bytes()).unwrap();
+            let mut encoder = ZlibEncoder::new(Vec::new(), Compression::default());
+            encoder.write_all(build_xml.as_bytes()).unwrap();
 
             use base64::{engine::general_purpose::URL_SAFE, Engine as _};
-            let code = URL_SAFE.encode(d.finish().unwrap());
+            let code = URL_SAFE.encode(encoder.finish().unwrap());
 
             warp::reply::html(code)
         });
@@ -51,18 +49,15 @@ async fn main() {
 
 #[cfg(test)]
 mod tests {
-    use std::io::Write;
-
+    use base64::{engine::general_purpose::URL_SAFE, Engine as _};
     use flate2::{write::ZlibEncoder, Compression};
+    use std::io::Write;
 
     #[test]
     fn test_encode() {
-        let mut e = ZlibEncoder::new(Vec::new(), Compression::default());
-        e.write_all(b"0123456789").unwrap();
-
-        use base64::{engine::general_purpose::URL_SAFE, Engine as _};
-        let code = URL_SAFE.encode(e.finish().unwrap());
-
-        assert_eq!(code, "eJwzMDQyNjE1M7ewBAAK_wIO")
+        let mut encoder = ZlibEncoder::new(Vec::new(), Compression::default());
+        encoder.write_all(b"0123456789").unwrap();
+        let code = URL_SAFE.encode(encoder.finish().unwrap());
+        assert_eq!(code, "eJwzMDQyNjE1M7ewBAAK_wIO");
     }
 }

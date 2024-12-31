@@ -4,7 +4,7 @@ use crate::{
     db::{BaseType, Stat},
     translator::{
         provider::{attribute, base_type, gem, passive_skill, property, requirement, stat},
-        util::{get_zh_body, stat::Template, LINE_SEPERATOR},
+        util::{get_zh_body, stat::Template, LINE_SEPARATOR},
     },
 };
 
@@ -518,7 +518,7 @@ impl Basic {
                 if m_stat.line_count > lines.len() {
                     continue;
                 }
-                let mod_str = lines[..m_stat.line_count].join(LINE_SEPERATOR);
+                let mod_str = lines[..m_stat.line_count].join(LINE_SEPARATOR);
 
                 let stat = self.stat_provider.provide(m_stat.id);
                 if get_zh_body(&mod_str) == get_zh_body(&stat.zh) {

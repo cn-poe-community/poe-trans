@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     db::Stat,
-    translator::util::{get_zh_body, LINE_SEPERATOR},
+    translator::util::{get_zh_body, LINE_SEPARATOR},
 };
 
 pub struct Provider {
@@ -36,7 +36,7 @@ impl Provider {
                 }
             }
 
-            let lines: Vec<&str> = stat.zh.split(LINE_SEPERATOR).collect();
+            let lines: Vec<&str> = stat.zh.split(LINE_SEPARATOR).collect();
             let line_count = lines.len();
             if line_count == 1 {
                 continue;
