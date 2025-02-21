@@ -11,7 +11,7 @@ pub struct Items {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Character {
     pub class: String,
-    league: String,
+    pub league: String,
     pub level: i32,
     name: String,
     realm: String,

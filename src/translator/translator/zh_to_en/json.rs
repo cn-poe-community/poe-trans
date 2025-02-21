@@ -33,6 +33,8 @@ impl Json {
             self.pre_handle_item(x);
             self.trans_item(x);
         });
+
+        self.post_handle_items(items);
     }
 
     fn is_pob_item(&self, item: &Item) -> bool {
@@ -290,6 +292,15 @@ impl Json {
         }
     }
 
+    fn post_handle_items(&self, items: &mut Items) {
+        // Added a temporary workaround to handle incorrect data from Tencent server.
+        // The sub-codes should be removed when the bug is fixed.
+        if items.character.league.contains("费西亚") {
+            items.character.class =
+                String::from(map_to_phrecia_character_class(&items.character.class))
+        }
+    }
+
     pub fn trans_passive_skills(&self, passive_skills: &mut PassiveSkills) {
         for item in &mut passive_skills.items {
             self.trans_item(item);
@@ -313,6 +324,38 @@ impl Json {
             }
         }
     }
+}
+
+static ASCENDANCIES: [[&str; 4]; 7] = [
+    ["None", "Ascendant", "None", "None"],
+    ["None", "Juggernaut", "Berserker", "Chieftain"],
+    ["None", "Warden", "Deadeye", "Pathfinder"],
+    ["None", "Occultist", "Elementalist", "Necromancer"],
+    ["None", "Slayer", "Gladiator", "Champion"],
+    ["None", "Inquisitor", "Hierophant", "Guardian"],
+    ["None", "Assassin", "Trickster", "Saboteur"],
+];
+
+static PHRECIA_ASCENDANCIES: [[&str; 4]; 7] = [
+    ["None", "Scavenger", "None", "None"],
+    ["None", "Ancestral Commander", "Behemoth", "Antiquarian"],
+    ["None", "Wildspeaker", "Whisperer", "Daughter of Oshabi"],
+    ["None", "Harbinger", "Herald", "Bog Shaman"],
+    ["None", "Aristocrat", "Gambler", "Paladin"],
+    ["None", "Architect of Chaos", "Puppeteer", "Polytheist"],
+    ["None", "Servant of Arakaali", "Blind Prophet", "Surfcaster"],
+];
+
+// Temporary function used to resolve API errors of Tencent server
+pub fn map_to_phrecia_character_class(character_class: &str) -> &str {
+    for i in 0..ASCENDANCIES.len() {
+        for j in 0..ASCENDANCIES[i].len() {
+            if ASCENDANCIES[i][j] == character_class {
+                return PHRECIA_ASCENDANCIES[i][j];
+            }
+        }
+    }
+    character_class
 }
 
 #[cfg(test)]
