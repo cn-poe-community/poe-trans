@@ -5,7 +5,10 @@ use std::{
 };
 
 use indexmap::IndexMap;
-use support::{get_class_id, CLUSTER_JEWEL_SIZE_LARGE, CLUSTER_JEWEL_SIZE_MEDIUM};
+use support::{
+    get_class_and_ascendancy, is_phrecia_ascendancy, CLUSTER_JEWEL_SIZE_LARGE,
+    CLUSTER_JEWEL_SIZE_MEDIUM,
+};
 use xml::{
     items::Item,
     path_of_building::PathOfBuilding,
@@ -57,9 +60,9 @@ impl Transformer {
         let build = &mut building.build;
         let character = &self.items.character;
         build.level = character.level;
-        let (class_id, ascendancy_id) = support::get_class_id(&character.class);
-        build.class_name = support::get_class(class_id).to_string();
-        build.ascend_class_name = support::get_ascendancy(class_id, ascendancy_id).to_string();
+        let (class_name, ascend_name) = get_class_and_ascendancy(&character.class);
+        build.class_name = class_name.to_string();
+        build.ascend_class_name = ascend_name.to_string();
 
         self.parse_items(&mut item_id_gen, &mut building);
         self.parse_tree(&mut item_id_gen, &mut building);
@@ -161,8 +164,6 @@ impl Transformer {
     }
 
     fn parse_tree(&self, item_id_gen: &mut i32, building: &mut PathOfBuilding) {
-        let character = &self.items.character;
-
         let spec = &mut building.tree.spec;
 
         for data in &self.skills.items {
@@ -179,11 +180,16 @@ impl Transformer {
             spec.sockets.sockets.push(socket);
         }
 
-        let (class_id, ascendancy_id) = get_class_id(&character.class);
-        spec.class_id = class_id as i32;
-        spec.ascend_class_id = ascendancy_id as i32;
-
+        spec.class_id = self.skills.character;
+        spec.ascend_class_id = self.skills.ascendancy;
         spec.secondary_ascend_class_id = self.skills.alternate_ascendancy;
+
+        if is_phrecia_ascendancy(&self.items.character.class) {
+            spec.tree_version = String::from("3_25_alternate");
+        } else {
+            spec.tree_version = String::from("3_25");
+        }
+
         if let model::passive_skills::MasteryEffects::Table(effects) = &self.skills.mastery_effects
         {
             for (k, v) in effects {
@@ -204,7 +210,6 @@ impl Transformer {
     }
 
     pub fn get_encoded_tree(&self) -> String {
-        let (class_id, ascendancy_id) = support::get_class_id(&self.items.character.class);
         let mut buffer: Vec<u8> = Vec::with_capacity(
             6 + 1 + self.skills.hashes.len() * 2 + 2 + self.skills.mastery_effects.len() * 4,
         );
@@ -213,8 +218,8 @@ impl Transformer {
         buffer.push(0);
         buffer.push(0);
         buffer.push(6);
-        buffer.push(class_id as u8);
-        buffer.push(ascendancy_id as u8);
+        buffer.push(self.skills.character as u8);
+        buffer.push(self.skills.ascendancy as u8);
 
         buffer.push(self.skills.hashes.len() as u8);
         for hash in &self.skills.hashes {

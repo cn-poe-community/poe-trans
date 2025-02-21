@@ -19,36 +19,51 @@ static ASCENDANCIES: [[&str; 4]; 7] = [
     ["None", "Assassin", "Trickster", "Saboteur"],
 ];
 
-pub fn get_class(class_id: usize) -> &'static str {
-    if class_id < CLASSES.len() {
-        return CLASSES[class_id];
-    }
-    "None"
-}
+static PHRECIA_ASCENDANCIES: [[&str; 4]; 7] = [
+    ["None", "Scavenger", "None", "None"],
+    ["None", "Ancestral Commander", "Behemoth", "Antiquarian"],
+    ["None", "Wildspeaker", "Whisperer", "Daughter of Oshabi"],
+    ["None", "Harbinger", "Herald", "Bog Shaman"],
+    ["None", "Aristocrat", "Gambler", "Paladin"],
+    ["None", "Architect of Chaos", "Puppeteer", "Polytheist"],
+    ["None", "Servant of Arakaali", "Blind Prophet", "Surfcaster"],
+];
 
-pub fn get_ascendancy(class_id: usize, ascendancy_id: usize) -> &'static str {
-    if class_id < CLASSES.len() && ascendancy_id < ASCENDANCIES[0].len() {
-        return ASCENDANCIES[class_id][ascendancy_id];
-    }
-    "None"
-}
-
-pub fn get_class_id(class: &str) -> (usize, usize) {
+pub fn get_class_and_ascendancy(character_class: &str) -> (&'static str, &'static str) {
     for i in 0..CLASSES.len() {
-        if CLASSES[i] == class {
-            return (i, 0);
+        if CLASSES[i] == character_class {
+            return (CLASSES[i], "None");
         }
     }
 
     for i in 0..ASCENDANCIES.len() {
         for j in 0..ASCENDANCIES[i].len() {
-            if ASCENDANCIES[i][j] == class {
-                return (i, j);
+            if ASCENDANCIES[i][j] == character_class {
+                return (CLASSES[i], ASCENDANCIES[i][j]);
             }
         }
     }
 
-    (0, 0)
+    for i in 0..PHRECIA_ASCENDANCIES.len() {
+        for j in 0..PHRECIA_ASCENDANCIES[i].len() {
+            if PHRECIA_ASCENDANCIES[i][j] == character_class {
+                return (CLASSES[i], PHRECIA_ASCENDANCIES[i][j]);
+            }
+        }
+    }
+
+    ("", "")
+}
+
+pub fn is_phrecia_ascendancy(character_class: &str) -> bool {
+    for i in 0..PHRECIA_ASCENDANCIES.len() {
+        for j in 0..PHRECIA_ASCENDANCIES[i].len() {
+            if PHRECIA_ASCENDANCIES[i][j] == character_class {
+                return true;
+            }
+        }
+    }
+    false
 }
 
 pub static CLUSTER_JEWEL_SIZE_SMALL: usize = 0;

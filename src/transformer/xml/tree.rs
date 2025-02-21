@@ -39,7 +39,7 @@ pub struct Spec {
 impl Default for Spec {
     fn default() -> Self {
         Self {
-            tree_version: "3_25".to_string(),
+            tree_version: "".to_string(),
             ascend_class_id: 0,
             secondary_ascend_class_id: 0,
             class_id: 0,
