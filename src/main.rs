@@ -18,6 +18,8 @@ struct JsonBuild {
 
 #[tokio::main]
 async fn main() {
+    env_logger::init();
+
     let factory = Arc::new(Factory::new());
     let factory = warp::any().map(move || factory.clone());
 

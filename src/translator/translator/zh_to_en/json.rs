@@ -1,6 +1,6 @@
-use std::sync::Arc;
-
+use log::warn;
 use regex::Regex;
+use std::sync::Arc;
 
 use crate::model::{
     items::{Item, Items},
@@ -92,6 +92,9 @@ impl Json {
         if let Some((name, base_type)) = result {
             item.name = name;
             item.base_type = base_type;
+        } else {
+            warn!("should be translated: item name, {0}", item.name);
+            warn!("should be translated: item name, {0}", item.base_type);
         }
 
         let result = self.basic.trans_type_line(&item.type_line);
@@ -105,6 +108,8 @@ impl Json {
                 let result = self.basic.trans_req_name(&r.name);
                 if let Some(name) = result {
                     r.name = name;
+                } else {
+                    warn!("should be translated: requirement name, {0}", r.name);
                 }
 
                 for v in &mut r.values {
@@ -118,6 +123,8 @@ impl Json {
                     let result = self.basic.trans_req_suffix(suffix);
                     if let Some(result) = result {
                         r.suffix = Some(result);
+                    } else {
+                        warn!("should be translated: requirement suffix, {0}", suffix);
                     }
                 }
             }
@@ -129,6 +136,8 @@ impl Json {
                 let result = self.basic.trans_prop_name(&p.name);
                 if let Some(name) = result {
                     p.name = name;
+                } else {
+                    warn!("should be translated: property name, {0}", p.name);
                 }
 
                 for p in &mut p.values {
@@ -155,6 +164,8 @@ impl Json {
                 let value = self.basic.trans_mod(mod_str);
                 if let Some(value) = value {
                     *mod_str = value;
+                } else {
+                    warn!("should be translated: enchant mod, {0}", mod_str);
                 }
             }
         }
@@ -164,6 +175,8 @@ impl Json {
                 let value = self.basic.trans_mod(mod_str);
                 if let Some(value) = value {
                     *mod_str = value;
+                } else {
+                    warn!("should be translated: implicit mod, {0}", mod_str);
                 }
             }
         }
@@ -173,6 +186,8 @@ impl Json {
                 let value = self.basic.trans_mod(mod_str);
                 if let Some(value) = value {
                     *mod_str = value;
+                } else {
+                    warn!("should be translated: explicit mod, {0}", mod_str);
                 }
             }
         }
@@ -182,6 +197,8 @@ impl Json {
                 let value = self.basic.trans_mod(mod_str);
                 if let Some(value) = value {
                     *mod_str = value;
+                } else {
+                    warn!("should be translated: crafted mod, {0}", mod_str);
                 }
             }
         }
@@ -191,6 +208,8 @@ impl Json {
                 let value = self.basic.trans_mod(mod_str);
                 if let Some(value) = value {
                     *mod_str = value;
+                } else {
+                    warn!("should be translated: utility mod, {0}", mod_str);
                 }
             }
         }
@@ -200,6 +219,8 @@ impl Json {
                 let value = self.basic.trans_mod(mod_str);
                 if let Some(value) = value {
                     *mod_str = value;
+                } else {
+                    warn!("should be translated: fractured mod, {0}", mod_str);
                 }
             }
         }
@@ -209,6 +230,8 @@ impl Json {
                 let value = self.basic.trans_mod(mod_str);
                 if let Some(value) = value {
                     *mod_str = value;
+                } else {
+                    warn!("should be translated: scourge mod, {0}", mod_str);
                 }
             }
         }
@@ -218,6 +241,8 @@ impl Json {
                 let value = self.basic.trans_mod(mod_str);
                 if let Some(value) = value {
                     *mod_str = value;
+                } else {
+                    warn!("should be translated: crucible mod, {0}", mod_str);
                 }
             }
         }
@@ -227,17 +252,26 @@ impl Json {
         let result = self.basic.trans_gem(&gem.base_type);
         if let Some(base_type) = result {
             gem.base_type = base_type;
+        } else {
+            warn!("should be translated: gem base_type, {0}", gem.base_type);
         }
 
         let result = self.basic.trans_gem(&gem.type_line);
         if let Some(type_line) = result {
             gem.type_line = type_line;
+        } else {
+            warn!("should be translated: gem type_line, {0}", gem.type_line);
         }
 
         if let Some(hybrid) = &mut gem.hybrid {
             let result = self.basic.trans_gem(&hybrid.base_type_name);
             if let Some(name) = result {
                 hybrid.base_type_name = name;
+            } else {
+                warn!(
+                    "should be translated: gem hybrid baseTypeName, {0}",
+                    hybrid.base_type_name
+                );
             }
         }
 
@@ -266,11 +300,15 @@ impl Json {
                 let name = self.basic.trans_keystone(&o.name);
                 if let Some(name) = name {
                     o.name = name;
+                } else {
+                    warn!("should be translated: keystone, {0}", o.name);
                 }
             } else {
                 let name = self.basic.trans_base_type(&o.name);
                 if let Some(name) = name {
                     o.name = name;
+                } else {
+                    warn!("should be translated: base_type, {0}", o.name);
                 }
             }
         }
