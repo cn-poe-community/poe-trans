@@ -96,7 +96,7 @@ impl Json {
             item.base_type = base_type;
         } else {
             warn!("should be translated: item name, {0}", item.name);
-            warn!("should be translated: item name, {0}", item.base_type);
+            warn!("should be translated: item base type, {0}", item.base_type);
         }
 
         let result = self.basic.trans_type_line(&item.type_line);

@@ -554,6 +554,7 @@ fn test_translate() {
         assets.shields,
         assets.flasks,
         assets.jewels,
+        assets.tinctures,
         assets.weapons,
         assets.tattoos,
     ]);
