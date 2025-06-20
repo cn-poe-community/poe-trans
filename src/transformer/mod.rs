@@ -185,9 +185,9 @@ impl Transformer {
         spec.secondary_ascend_class_id = self.skills.alternate_ascendancy;
 
         if is_phrecia_ascendancy(&self.items.character.class) {
-            spec.tree_version = String::from("3_25_alternate");
+            spec.tree_version = String::from("3_26_alternate");
         } else {
-            spec.tree_version = String::from("3_25");
+            spec.tree_version = String::from("3_26");
         }
 
         if let model::passive_skills::MasteryEffects::Table(effects) = &self.skills.mastery_effects
