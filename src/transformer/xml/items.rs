@@ -259,7 +259,7 @@ impl Item {
             energy_shield,
             armour,
             ward,
-            unique_id: item.id.clone(),
+            unique_id: item.id.clone().unwrap(),
             shaper,
             elder,
             warlord,

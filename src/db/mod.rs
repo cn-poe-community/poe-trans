@@ -114,6 +114,7 @@ pub struct Assets {
     pub notables: Vec<Node>,
     pub stats: Vec<Stat>,
     pub tattoos: Vec<BaseType>,
+    pub grafts: Vec<BaseType>,
 }
 
 #[cfg(test)]

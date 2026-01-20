@@ -90,9 +90,8 @@ impl Transformer {
                     item_id as i32,
                 )));
 
-            if let Some(socketed_items) = &data.socketed_items {
-                if socketed_items.len() > 0 {
-                    let sockets = data.sockets.as_ref().unwrap();
+            if let (Some(socketed_items), Some(sockets)) = (&data.socketed_items, &data.sockets) {
+                if sockets.len() > 0 && socketed_items.len() > 0 {
                     let mut group: Vec<&Box<model::items::Item>> = vec![];
                     let mut prev_group_num: usize = 0;
                     let skills = &mut building.skills.skill_set.skills;
@@ -187,7 +186,7 @@ impl Transformer {
         if is_phrecia_ascendancy(&self.items.character.class) {
             spec.tree_version = String::from("3_26_alternate");
         } else {
-            spec.tree_version = String::from("3_26");
+            spec.tree_version = String::from("3_27");
         }
 
         if let model::passive_skills::MasteryEffects::Table(effects) = &self.skills.mastery_effects
