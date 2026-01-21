@@ -23,7 +23,7 @@ mod support;
 mod xml;
 
 pub struct Options {
-    skip_weapon2: bool,
+    pub skip_weapon2: bool,
 }
 
 impl Default for Options {
